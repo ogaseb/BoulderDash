@@ -4,38 +4,38 @@ function eventsContainer() {
     startGameLoop()
     time = document.getElementById('time')
     
-    document.getElementById('life').innerHTML = zycie
+    document.getElementById('life').innerHTML = player_life
     document.getElementById("overall_score").innerHTML = '000000'
-    map_wczytaj(document.getElementById("level").value)
-    document.getElementById("wczytaj").style.display = 'none'
+    map_load(document.getElementById("level").value)
+    document.getElementById("load").style.display = 'none'
     document.getElementById("start").addEventListener("click", startgame);
     document.getElementById("suicide").addEventListener("click", gameover);
-    document.getElementById("bricks").addEventListener("mouseover", edytor);
+    document.getElementById("bricks").addEventListener("mouseover", map_edit);
     document.getElementById("bricks").addEventListener("mouseup", function (){
-        edycja = false
+        can_edit = false
     });
     document.getElementById("bricks").addEventListener("mousedown", function(event){
-        edycja = true
-        edytor(event)
+        can_edit = true
+        map_edit(event)
     })
     document.getElementById("levels").addEventListener("click", function (event) {
         if (document.getElementById("admin_tools").checked == false) {
-            alert('STAY DETERMINED!')
+            alert('STAY DETERMINED!') // yeah i know Undertale reference
             event.preventDefault()
         }      
     })
     document.getElementById("levels").addEventListener("change", function (event) {
         if (document.getElementById('levels').value) {
-            _poziom_ = document.getElementById('levels').value
-            map_wczytaj(document.getElementById("level").value)
+            _map_level_ = document.getElementById('levels').value
+            map_load(document.getElementById("level").value)
         }
     })
-    document.getElementById("zapisz").addEventListener("click", function () {
-        document.getElementById("level").value = map_zapisz() 
+    document.getElementById("save").addEventListener("click", function () {
+        document.getElementById("level").value = map_save() 
     })
-    document.getElementById("wczytaj").addEventListener("click", function () {
+    document.getElementById("load").addEventListener("click", function () {
         document.getElementById("overall_score").innerHTML = '000000'
-        map_wczytaj(document.getElementById("level").value)
+        map_load(document.getElementById("level").value)
     })
     document.getElementById("pauza").addEventListener("click", function () {
         restart = true
@@ -49,16 +49,16 @@ function eventsContainer() {
     admin_tool()
     document.getElementById("admin_tools").addEventListener("change", admin_tool)  
 }
-var edycja, restart;
+var can_edit, restart;
 var next_lifeup = 500;
 var currentlyPressedKey;
 var is_active;
-var zycie = 3;
+var player_life = 3;
 var player_can_walk = true;
-var poz_gracza_x = 0;
-var poz_gracza_y = 0;
-Object.defineProperty(window, '_poziom_', {
-        get: function() { // wczytuje wartość zmiennej _poziom_ bezpośrednio z HTML
+var pos_player_x = 0;
+var pos_player_y = 0;
+Object.defineProperty(window, '_map_level_', {
+        get: function() { // wczytuje wartość zmiennej _map_level_ bezpośrednio z HTML
             return Number(document.getElementById('levels').value)
         },
         set: function (value) { // zapisuje nowy poziom do HTML
@@ -72,15 +72,15 @@ function startGameLoop() {
 //ta funkcja na dole jest do tworzenai mapek
 function startgame() {
     makeLevel();
-    //map_wczytaj()
+    //map_load()
     document.getElementById("coin_score").innerHTML = 0
     document.getElementById("overall_score").innerHTML = '000000'
     document.getElementById('time').innerHTML = Infinity
 };
 function makeLevel() {
     restart = true
-    width = document.getElementById('szerokosc_plansza').value
-    heigth = document.getElementById('wysokosc_plansza').value
+    width = document.getElementById('width_board').value
+    heigth = document.getElementById('height_board').value
     document.getElementById("coin_score").innerHTML = 0
     var bricks = document.getElementById('bricks')
     bricks.style.width = 20 * heigth+ 'px'
@@ -130,7 +130,7 @@ function makeLevel() {
             document.getElementById("scoreboard2").style.display = 'flex'
             document.getElementById("scoreboard").style.display = 'none'
         } else {
-            //var poz = document.querySelector('.gracz').id.split('_')
+            //var poz = document.querySelector('.player').id.split('_')
             player_can_walk = true
             document.getElementById("scoreboard2").style.display = 'none'
             document.getElementById("scoreboard").style.display = 'flex'
@@ -142,8 +142,8 @@ function makeLevel() {
 
     
 
-    bri = document.getElementById(poz_gracza_x + '_' + poz_gracza_y);
-    bri.className = 'gracz'
+    bri = document.getElementById(pos_player_x + '_' + pos_player_y);
+    bri.className = 'player'
 }
 function kolizja(bri) {
     switch (bri.className) {
@@ -153,31 +153,31 @@ function kolizja(bri) {
             snd.volume = 0.04
             return true;
             break;
-        case "czysto":
-            var snd = new Audio("audio/czysto.ogg"); // buffers automatically when created
+        case "clear":
+            var snd = new Audio("audio/clear.ogg"); // buffers automatically when created
             snd.play();
             snd.volume = 0.04
             return true;
             break;
         case "stone":
             
-            var pos_kam = bri.id.split('_')
-            var po_prawej = document.getElementById(pos_kam[0] + '_' + (Number(pos_kam[1]) + 1))
-            var po_lewej = document.getElementById(pos_kam[0] + '_' + (Number(pos_kam[1]) - 1))
-            var gracz_nadole = document.getElementById((Number(pos_kam[0])+1) + '_' + pos_kam[1]) || {className: ''}
-            var gracz_nagorze = document.getElementById((Number(pos_kam[0]) - 1) + '_' + pos_kam[1]) || { className: '' }
+            var pos_stone = bri.id.split('_')
+            var to_right = document.getElementById(pos_stone[0] + '_' + (Number(pos_stone[1]) + 1))
+            var to_left = document.getElementById(pos_stone[0] + '_' + (Number(pos_stone[1]) - 1))
+            var player_bottom = document.getElementById((Number(pos_stone[0])+1) + '_' + pos_stone[1]) || {className: ''}
+            var player_top = document.getElementById((Number(pos_stone[0]) - 1) + '_' + pos_stone[1]) || { className: '' }
 
-            if (gracz_nadole.className == 'gracz' || gracz_nagorze.className == 'gracz') {
+            if (player_bottom.className == 'player' || player_top.className == 'player') {
                 return false;
             }
 
-            if (po_prawej.className == 'czysto') {
-                po_prawej.className = 'stone'
+            if (to_right.className == 'clear') {
+                to_right.className = 'stone'
                 return true;
             }
             
-            if (po_lewej.className == 'czysto') {
-                po_lewej.className = 'stone'
+            if (to_left.className == 'clear') {
+                to_left.className = 'stone'
                 return true;
             }
             return false;
@@ -205,11 +205,11 @@ function kolizja(bri) {
                 snd.play();
                 snd.volume = 0.04
                 
-                switch (_poziom_) {
+                switch (_map_level_) {
                     case 1:
                         if (coin_score.innerHTML == '12') {
                             pkt_coin.innerHTML = '15'
-                           // document.getElementById('coin_img').innerHTML = '<img style="display:inline" src="tekstures/coin.gif" /><img style="display:inline" src="tekstures/coin.gif" /><img style="display:inline" src="tekstures/coin.gif" />'
+                           // document.getElementById('coin_img').innerHTML = '<img style="display:inline" src="textures/coin.gif" /><img style="display:inline" src="textures/coin.gif" /><img style="display:inline" src="textures/coin.gif" />'
                             //document.getElementById('required_coins').innerHTML = document.getElementById('pkt_coin').innerHTML
                            // document.getElementById('pkt_coin').innerHTML = ' '
                             
@@ -363,12 +363,12 @@ function kolizja(bri) {
                     //score.innerHTML++
                 } else {
                     clearInterval(interval)
-                    map_wczytaj(document.getElementById("level").value)
-                    //alert("poziom " + _poziom_ + "!")
+                    map_load(document.getElementById("level").value)
+                    //alert("poziom " + _map_level_ + "!")
                     
                 }
             }, 28)
-            _poziom_++
+            _map_level_++
             
             return true;
             break;
@@ -402,69 +402,69 @@ function move(event){
     //87 - w , 83 -s, 65 -a, 68 - d
     switch (key){
         case 87:
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var nowy_x = poz_gracza_x -1; 
-            var nowy_y = poz_gracza_y - 0;
+            document.querySelector('.player').style.backgroundImage = ''
+            var new_x = pos_player_x -1; 
+            var new_y = pos_player_y - 0;
             bricks.style.opacity = 1;
-            var czy_isc = true;
+            var can_walk = true;
             restart = false
             break;
         case 83:
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var nowy_x = poz_gracza_x +1; 
-            var nowy_y = poz_gracza_y - 0;
+            document.querySelector('.player').style.backgroundImage = ''
+            var new_x = pos_player_x +1; 
+            var new_y = pos_player_y - 0;
             bricks.style.opacity = 1;
-            var czy_isc = true;
+            var can_walk = true;
             restart = false
             break;
         case 65:
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var player_teksture = 'url(tekstures/player_left.gif)'
-            var nowy_x = poz_gracza_x - 0; 
-            var nowy_y = poz_gracza_y - 1;
+            document.querySelector('.player').style.backgroundImage = ''
+            var player_texture = 'url(textures/player_left.gif)'
+            var new_x = pos_player_x - 0; 
+            var new_y = pos_player_y - 1;
             bricks.style.opacity = 1;
-            var czy_isc = true;
+            var can_walk = true;
             restart = false
             break;
         case 68:
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var player_teksture = 'url(tekstures/player_right.gif)'
-            var nowy_x = poz_gracza_x - 0;
-            var nowy_y = poz_gracza_y + 1;
+            document.querySelector('.player').style.backgroundImage = ''
+            var player_texture = 'url(textures/player_right.gif)'
+            var new_x = pos_player_x - 0;
+            var new_y = pos_player_y + 1;
             bricks.style.opacity = 1;
-            var czy_isc = true;
+            var can_walk = true;
             restart = false
             break;
         case 38://strzałki
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var nowy_x = poz_gracza_x - 1;
-            var nowy_y = poz_gracza_y - 0;
+            document.querySelector('.player').style.backgroundImage = ''
+            var new_x = pos_player_x - 1;
+            var new_y = pos_player_y - 0;
             bricks.style.opacity = 1;
-            var czy_isc = false;
+            var can_walk = false;
             break;
         case 40:
-            document.querySelector('.gracz').style.backgroundImage = ''
-            var nowy_x = poz_gracza_x + 1;
-            var nowy_y = poz_gracza_y - 0;
+            document.querySelector('.player').style.backgroundImage = ''
+            var new_x = pos_player_x + 1;
+            var new_y = pos_player_y - 0;
             bricks.style.opacity = 1;
-            var czy_isc = false;
+            var can_walk = false;
             break;
         case 37:
-            document.querySelector('.gracz').style.backgroundImage = 'url(tekstures/player_left.gif)'
+            document.querySelector('.player').style.backgroundImage = 'url(textures/player_left.gif)'
            
             
-            var nowy_x = poz_gracza_x - 0;
-            var nowy_y = poz_gracza_y - 1;
+            var new_x = pos_player_x - 0;
+            var new_y = pos_player_y - 1;
             bricks.style.opacity = 1;
-            var czy_isc = false;
+            var can_walk = false;
             break;
         case 39:
             
-            document.querySelector('.gracz').style.backgroundImage = 'url(tekstures/player_right.gif)'
-            var nowy_x = poz_gracza_x - 0;
-            var nowy_y = poz_gracza_y + 1;
+            document.querySelector('.player').style.backgroundImage = 'url(textures/player_right.gif)'
+            var new_x = pos_player_x - 0;
+            var new_y = pos_player_y + 1;
             bricks.style.opacity = 1;
-            var czy_isc = false;
+            var can_walk = false;
             break;
         case 27:
             restart = true
@@ -478,60 +478,60 @@ function move(event){
     }
     //event.preventDefault()
     
-        var _bri = document.getElementById(nowy_x + '_' + nowy_y)
+        var _bri = document.getElementById(new_x + '_' + new_y)
         if (_bri != null && kolizja(_bri)) {
-            if (czy_isc) {
-                _bri.className = 'gracz'
-                _bri.style.backgroundImage = player_teksture || ''
-                var star_poz = document.getElementById(poz_gracza_x + '_' + poz_gracza_y)
+            if (can_walk) {
+                _bri.className = 'player'
+                _bri.style.backgroundImage = player_texture || ''
+                var star_poz = document.getElementById(pos_player_x + '_' + pos_player_y)
 
-                star_poz.className = 'czysto';
+                star_poz.className = 'clear';
 
-                poz_gracza_y = nowy_y;
-                poz_gracza_x = nowy_x;
+                pos_player_y = new_y;
+                pos_player_x = new_x;
             } else {
-                _bri.className = 'czysto'
+                _bri.className = 'clear'
             }
         }
  
 }
-function edytor(event){
-    if(event.target!==event.currentTarget && edycja && document.getElementById("admin_tools").checked) {  // MAGICZNY IF
-        var objekciki = document.getElementById('objekciki').value
-        event.target.className = objekciki; 
+function map_edit(event){
+    if(event.target!==event.currentTarget && can_edit && document.getElementById("admin_tools").checked) {  // MAGICZNY IF
+        var game_objects = document.getElementById('game_objects').value
+        event.target.className = game_objects; 
     }
 }
 
-setInterval (spadaj, 150)
-function spadaj() {
+setInterval (falling, 150)
+function falling() {
     if (restart) {
         return
     };
-    var gracz = document.querySelector(".gracz")
-    var kamienie_monety = document.querySelectorAll(".stone, .coin, .cobble")
+    var player = document.querySelector(".player")
+    var stone_coin = document.querySelectorAll(".stone, .coin, .cobble")
      magic_cobble = document.querySelectorAll(".magic_cobble")
   
 
     for (var j = magic_cobble.length - 1; j >= 0; j--) {
      
-        var mag_cob = magic_cobble[j] 
-        var poz_mag_kamien = mag_cob.id.split('_')
+        var mag_cobble = magic_cobble[j] 
+        var pos_mag_cobble = mag_cobble.id.split('_')
         
-        var mag_nad = document.getElementById(Number(poz_mag_kamien[0]) - 1 + '_' + poz_mag_kamien[1]) || { }
-        var mag_pod = document.getElementById(Number(poz_mag_kamien[0]) + 1 + '_' + poz_mag_kamien[1]) || { }
-        var mag_lewo = document.getElementById(poz_mag_kamien[0]+ '_' + (Number(poz_mag_kamien[1]) - 1) )|| {}
-        var mag_prawo = document.getElementById(poz_mag_kamien[0] + '_' + (Number(poz_mag_kamien[1]) + 1)) || { }
+        var mag_top = document.getElementById(Number(pos_mag_cobble[0]) - 1 + '_' + pos_mag_cobble[1]) || { }
+        var mag_bottom = document.getElementById(Number(pos_mag_cobble[0]) + 1 + '_' + pos_mag_cobble[1]) || { }
+        var mag_left = document.getElementById(pos_mag_cobble[0]+ '_' + (Number(pos_mag_cobble[1]) - 1) )|| {}
+        var mag_right = document.getElementById(pos_mag_cobble[0] + '_' + (Number(pos_mag_cobble[1]) + 1)) || { }
         
-        window.aktywuj_mag_el = function(el) { 
+        window.active_mag_el = function(el) { 
             is_active = true
             //el.style.background = 'yellow'
             //var all = el.querySelectorAll('.magic_cobble') 
             for (var i = 0; i < magic_cobble.length; i++) {
-                magic_cobble[i].style.backgroundImage = 'url(tekstures/magic_stone.gif)'
+                magic_cobble[i].style.backgroundImage = 'url(textures/magic_stone.gif)'
             };
         }
         
-        window.deaktywuj_mag_el = function(el) {
+        window.deactive_mag_el = function(el) {
             
             is_active = false
             //var all = magic_cobble.querySelectorAll('.af_magic_cobble') 
@@ -542,84 +542,84 @@ function spadaj() {
            
         }
         
-        if (mag_nad.className == 'stone' && ( mag_nad.leci || is_active) && mag_pod.className == 'czysto'){
-            if (_poziom_ == 9) {
+        if (mag_top.className == 'stone' && ( mag_top.fall || is_active) && mag_bottom.className == 'clear'){
+            if (_map_level_ == 9) {
                 var czas = 20000
             }
-            if (_poziom_ == 18 || _poziom_ == 20) {
-                var czas = 10000
+            if (_map_level_ == 18 || _map_level_ == 20) {
+                var time = 10000
             }
-            if (_poziom_ == 19) {
-                var czas = 25000
+            if (_map_level_ == 19) {
+                var time = 25000
             }
-            if (_poziom_ == 20) {
-                var czas = 25000
+            if (_map_level_ == 20) {
+                var time = 25000
             }
-            aktywuj_mag_el(mag_cob)
-            setTimeout(deaktywuj_mag_el, czas, mag_cob) 
+            active_mag_el(mag_cobble)
+            setTimeout(deactive_mag_el, time, mag_cobble) 
             if (is_active) {
-                mag_nad.className = 'czysto'
-                mag_pod.className = 'coin'
+                mag_top.className = 'clear'
+                mag_bottom.className = 'coin'
             };
             
         }
-        else if (mag_nad.className == 'coin' && is_active && mag_pod.className == 'czysto') {
-            if (_poziom_ == 9) {
-                var czas = 20000
+        else if (mag_top.className == 'coin' && is_active && mag_bottom.className == 'clear') {
+            if (_map_level_ == 9) {
+                var time = 20000
             }
-            if (_poziom_ == 18 || _poziom_ == 20) {
-                var czas = 10000
+            if (_map_level_ == 18 || _map_level_ == 20) {
+                var time = 10000
             }
-            if (_poziom_ == 19) {
-                var czas = 25000
+            if (_map_level_ == 19) {
+                var time = 25000
             }
-            if (_poziom_ == 20) {
-                var czas = 25000
+            if (_map_level_ == 20) {
+                var time = 25000
             }
-            aktywuj_mag_el(mag_cob)
-            setTimeout(deaktywuj_mag_el, czas, mag_cob)
+            active_mag_el(mag_cobble)
+            setTimeout(deactive_mag_el, time, mag_cobble)
             if (is_active) { 
-                mag_nad.className = 'czysto'
-            mag_pod.className = 'stone'};
+                mag_top.className = 'clear'
+            mag_bottom.className = 'stone'};
            
         }
     }
-    for (var i = kamienie_monety.length - 1; i >= 0; i--) {
+    for (var i = stone_coin.length - 1; i >= 0; i--) {
         // because we dont want mess with gravity
-        // making its working for fuck sake!!! DONT TOUCH IT! YOU!!!!!!
+        // making it working for f**k s**e!!! DONT TOUCH IT! YOU!!!
         if (player_can_walk == false) {
             return
         }
         //if (restart) {   
         //    return
         //}
-        var gra = gracz
-        var poz_gra = gra.id.split('_');
-        var kam = kamienie_monety[i]
-        var poz  = kam.id.split('_');//dzieli id na dwie zmienne
+        var player = player
+        var pos_player = player.id.split('_');
+        var stone = stone_coin[i]
+        var pos  = stone.id.split('_');//dzieli id na dwie zmienne
         //wybieranie id elementu ponizej
-        var pod = document.getElementById(Number(poz[0]) + 1 + '_' + poz[1]) || { className: '' } 
+        var bottom = document.getElementById(Number(pos[0]) + 1 + '_' + pos[1]) || { className: '' } 
 
         
-        if (kam.className != 'stone' && kam.className != 'coin') {
+        if (stone.className != 'stone' && stone.className != 'coin') {
             continue    
         }
         
-        //funkcja losujaca w ktora stronie spadnie kamien                                                       
+        //funkcja losujaca w ktora stronie spadnie stoneien                                                       
         var x = [1, -1]
         function random(x){
             return x[Math.floor(x.length * Math.random())]
         }
         var rand_x = random(x)
-        //wybieranie id dla kamienia spadajacego z kamienia
-        var kam_obok = document.getElementById(poz[0] + '_' + ((Number(poz[1]) + rand_x)))
-        var kam_obok_nad = document.getElementById((Number(poz[0]) - 1) + '_' + ((Number(poz[1]) + rand_x)))
-        var kam_obok_pod = document.getElementById((Number(poz[0]) + 1) + '_' + ((Number(poz[1]) + rand_x)))
-        // sprawdzanie nad kamienie_monetym
-        var kam_nagorze = document.getElementById((Number(poz[0]) - 1) + '_' + poz[1]) || { className: '' }
+        //wybieranie id dla stoneienia fallingacego z stoneienia
+        var stone_near = document.getElementById(pos[0] + '_' + ((Number(pos[1]) + rand_x)))
+        var stone_near_top = document.getElementById((Number(pos[0]) - 1) + '_' + ((Number(pos[1]) + rand_x)))
+        var stone_near_bottom = document.getElementById((Number(pos[0]) + 1) + '_' + ((Number(pos[1]) + rand_x)))
+        // sprawdzanie nad stone_coinm
+        var stone_top = document.getElementById((Number(pos[0]) - 1) + '_' + pos[1]) || { className: '' }
         //spadanie kamienia gdy jest w powietrzu
-        if (pod.className == 'czysto') {
-            if (kam.className == 'coin') {
+        if (bottom.className == 'clear') {
+            if (stone.className == 'coin') {
                 var _rand_sound_ = Math.floor((Math.random() * 2) + 1);
                 switch(_rand_sound_){
                     case 1:
@@ -635,50 +635,50 @@ function spadaj() {
                 }
                 
             }
-            pod.className = kam.className;
-            pod.leci= true
-            kam.className = 'czysto'
+            bottom.className = stone.className;
+            bottom.fall= true
+            stone.className = 'clear'
             
             continue
         }
-        //spadanie kamienia z kamienia
-        if (kam_obok != null && kam_obok.className == 'czysto' && (kam_nagorze.className == 'stone' || kam_nagorze.className == 'coin') && kam_obok_nad.className == 'czysto') {
-            kam_obok_nad.className = kam_nagorze.className;
-            kam_nagorze.className = 'czysto' 
+        //spadanie stoneienia z stoneienia
+        if (stone_near != null && stone_near.className == 'clear' && (stone_top.className == 'stone' || stone_top.className == 'coin') && stone_near_top.className == 'clear') {
+            stone_near_top.className = stone_top.className;
+            stone_top.className = 'clear' 
         }
-        else if (pod.className == 'cobble' && kam_obok_pod.className == 'czysto' && kam_obok.className == "czysto") {
-            kam_obok.className = kam.className
-            kam.leci = true
-            kam.className = 'czysto'
+        else if (bottom.className == 'cobble' && stone_near_bottom.className == 'clear' && stone_near.className == "clear") {
+            stone_near.className = stone.className
+            stone.fall = true
+            stone.className = 'clear'
         }
-        //smierc gracza przy spadaniu kamienia, nie gdy jest pod nim
+        //smierc playera przy spadaniu stoneienia, nie gdy jest bottom nim
         
-        if (pod.className != 'czysto' && kam.leci == true && kam.className != 'coin') {
+        if (bottom.className != 'clear' && stone.fall == true && stone.className != 'coin') {
             var snd = new Audio("audio/stone.ogg"); // buffers automatically when created
             
             snd.play();
             snd.volume = 0.03
             }
         
-        if (kam.leci) {
-            if (pod.className == 'gracz' ) {
+        if (stone.fall) {
+            if (bottom.className == 'player' ) {
                 
-                coin_explosion(pod.id.split('_'), 'czysto')
+                coin_explosion(bottom.id.split('_'), 'clear')
                 gameover()
-                kam.leci = false
+                stone.fall = false
             }
             
-            else if (pod.className == 'butterfly')  {
+            else if (bottom.className == 'butterfly')  {
 
-                coin_explosion(pod.id.split('_'), 'coin')
+                coin_explosion(bottom.id.split('_'), 'coin')
             }
-            else if (pod.className == 'firefly') {
-                coin_explosion(pod.id.split('_'), 'czysto')
+            else if (bottom.className == 'firefly') {
+                coin_explosion(bottom.id.split('_'), 'clear')
             }
         }
 
-        if (pod.className != 'czysto') {
-            kam.leci = false
+        if (bottom.className != 'clear') {
+            stone.fall = false
         }
     };  
 }
@@ -704,23 +704,23 @@ function enemy() {
 }
 
 function move_one(enemy, direction) {
-    var enemy_poz = enemy.id.split('_')
-    var new_position = (new Position(enemy_poz[0], enemy_poz[1])).add(direction).get()
-    if (new_position.className == 'czysto') {
+    var enemy_pos = enemy.id.split('_')
+    var new_position = (new Position(enemy_pos[0], enemy_pos[1])).add(direction).get()
+    if (new_position.className == 'clear') {
         new_position.className = enemy.className
-        enemy.className = 'czysto'
+        enemy.className = 'clear'
         return new_position
     }
-    else if (new_position.className == 'gracz') {
-        coin_explosion(new_position.id.split('_'), 'czysto')
+    else if (new_position.className == 'player') {
+        coin_explosion(new_position.id.split('_'), 'clear')
         gameover()
     }
     else if (new_position.className == 'bio_mass') {
         if (enemy.className == 'firefly') {
-            coin_explosion(enemy_poz, 'czysto')
+            coin_explosion(enemy_pos, 'clear')
         }
         else if (enemy.className == 'butterfly'){
-            coin_explosion(enemy_poz, 'coin')
+            coin_explosion(enemy_pos, 'coin')
         }
     }
 }
@@ -759,15 +759,15 @@ var dir_to_pos = [
 
 function gameover() {
             
-    if (_poziom_ % 5 == 0) {
-        _poziom_++
+    if (_map_level_ % 5 == 0) {
+        _map_level_++
     }
     else {
-    document.getElementById('life').innerHTML = zycie - 1
-    zycie--
-    //alert('umar, zostało ci ' + zycie + ' żyć!')
+    document.getElementById('life').innerHTML = player_life - 1
+    player_life--
+    //alert('umar, zostało ci ' + player_life + ' żyć!')
     
-    if (zycie == 0) {
+    if (player_life == 0) {
     //     var highscore = document.getElementById("overall_score").innerHTML
     //     swal({
     //           title: "Ranking",
@@ -800,7 +800,7 @@ function gameover() {
     //                     dataType: 'text',
     //                     success: function (response) {
     //                         alert(response)
-    //                         swal("", "zapisałem twój wynik pod nazwą: " + inputValue+"", "success")
+    //                         swal("", "zapisałem twój wynik bottom nazwą: " + inputValue+"", "success")
     //                         setTimeout(function(){location.href = 'start.html'}, 3000)
 
     //                         //alert()
@@ -817,62 +817,62 @@ function gameover() {
             
         document.getElementById('getttttttttttt_dunked_on').style.display = 'inline'
         document.getElementById('life').innerHTML = 3
-        _poziom_ = 1
-        zycie = 3
+        _map_level_ = 1
+        player_life = 3
         next_lifeup = 500
         document.getElementById("overall_score").innerHTML = '000000'
     }
     }
-    document.querySelector('.gracz').className = 'explosion'
+    document.querySelector('.player').className = 'explosion'
     player_can_walk = false
     if (document.getElementById('time').innerHTML === '0')
-        map_wczytaj(document.getElementById("level").value)
+        map_load(document.getElementById("level").value)
     else {
-        setTimeout(map_wczytaj, 3000, document.getElementById("level").value)
+        setTimeout(map_load, 3000, document.getElementById("level").value)
     }
 }
 
-function coin_explosion(poz_gra, typ) {
-    var wokol_gracz = [
-        document.getElementById(Number(poz_gra[0]) + '_' + poz_gra[1]) || {},
-        document.getElementById(Number(poz_gra[0]) + 1 + '_' + poz_gra[1]) || {},
-        document.getElementById(Number(poz_gra[0]) + -1 + '_' + poz_gra[1]) || {},
-        document.getElementById(Number(poz_gra[0]) + 1 + '_' + (Number(poz_gra[1]) + 1)) || {},
-        document.getElementById(Number(poz_gra[0]) + 1 + '_' + (Number(poz_gra[1]) - 1)) || {},
-        document.getElementById(Number(poz_gra[0]) - 1 + '_' + (Number(poz_gra[1]) + 1)) || {},
-        document.getElementById(Number(poz_gra[0]) - 1 + '_' + (Number(poz_gra[1]) - 1)) || {},
-        document.getElementById(poz_gra[0] + '_' + (Number(poz_gra[1]) + 1)) || {},
-        document.getElementById(poz_gra[0] + '_' + (Number(poz_gra[1]) - 1)) || {}
+function coin_explosion(pos_player, typ) {
+    var wokol_player = [
+        document.getElementById(Number(pos_player[0]) + '_' + pos_player[1]) || {},
+        document.getElementById(Number(pos_player[0]) + 1 + '_' + pos_player[1]) || {},
+        document.getElementById(Number(pos_player[0]) + -1 + '_' + pos_player[1]) || {},
+        document.getElementById(Number(pos_player[0]) + 1 + '_' + (Number(pos_player[1]) + 1)) || {},
+        document.getElementById(Number(pos_player[0]) + 1 + '_' + (Number(pos_player[1]) - 1)) || {},
+        document.getElementById(Number(pos_player[0]) - 1 + '_' + (Number(pos_player[1]) + 1)) || {},
+        document.getElementById(Number(pos_player[0]) - 1 + '_' + (Number(pos_player[1]) - 1)) || {},
+        document.getElementById(pos_player[0] + '_' + (Number(pos_player[1]) + 1)) || {},
+        document.getElementById(pos_player[0] + '_' + (Number(pos_player[1]) - 1)) || {}
     ]
-    document.getElementById(poz_gra[0]+'_'+poz_gra[1]).style.backgroundImage = ''
-    for (var i = 0; i < wokol_gracz.length; i++) {
-        if (wokol_gracz[i].className == 'gracz') {
+    document.getElementById(pos_player[0]+'_'+pos_player[1]).style.backgroundImage = ''
+    for (var i = 0; i < wokol_player.length; i++) {
+        if (wokol_player[i].className == 'player') {
             //document.getElementById("coin_score").innerHTML++
         }
-        else if (wokol_gracz[i].className != 'obsidian' ) {
-            wokol_gracz[i].className = 'explosion'
+        else if (wokol_player[i].className != 'obsidian' ) {
+            wokol_player[i].className = 'explosion'
             
         }
 
             
     }
     setTimeout(function () {
-        for (var i = 0; i < wokol_gracz.length; i++) {
+        for (var i = 0; i < wokol_player.length; i++) {
 
-            if (wokol_gracz[i].className == 'gracz') {
+            if (wokol_player[i].className == 'player') {
                 if (typ == 'coin')
                     document.getElementById("coin_score").innerHTML++
             }
-            else if (wokol_gracz[i].className == 'obsidian') {
+            else if (wokol_player[i].className == 'obsidian') {
                 //emm
             }
-            else wokol_gracz[i].className = typ
+            else wokol_player[i].className = typ
 
         }
     }, 600)
 }
 
-function map_zapisz() {
+function map_save() {
     var map = []
     for (var i = 0; i < width; i++) {
         map[i] = []
@@ -883,14 +883,14 @@ function map_zapisz() {
     return JSON.stringify(map)
 }
 
-function map_wczytaj(s) {
+function map_load(s) {
     var required_coins = document.getElementById('required_coins')
     
         pkt_coin = document.getElementById('pkt_coin')
-    if (_poziom_ == 21) {
-        _poziom_ = 1
+    if (_map_level_ == 21) {
+        _map_level_ = 1
     }
-    switch (_poziom_) {
+    switch (_map_level_) {
         case 1:
             pkt_coin.innerHTML = '10'
             required_coins.innerHTML = '12'            
@@ -980,14 +980,14 @@ function map_wczytaj(s) {
         var treeData;
         var oReq = new XMLHttpRequest();
         oReq.onload = reqListener;
-        var str_level = 'levels/level_'+_poziom_+'.json'
+        var str_level = 'levels/level_'+_map_level_+'.json'
         oReq.open("get", str_level, true);
         oReq.send();
 
         function reqListener(e) {
             map = JSON.parse(this.responseText);
-            document.getElementById('wysokosc_plansza').value = map[0].length
-            document.getElementById('szerokosc_plansza').value = map.length
+            document.getElementById('height_board').value = map[0].length
+            document.getElementById('width_board').value = map.length
             makeLevel()
             time.innerHTML = 150
             document.getElementById("time").innerHTML = 150
@@ -996,31 +996,31 @@ function map_wczytaj(s) {
                     document.getElementById(i + "_" + j).className = map[i][j]
                 }
             }
-            var gracz = document.querySelector('.gracz')
-            var gra = gracz.id.split('_')
+            var player = document.querySelector('.player')
+            var player = player.id.split('_')
 
-            poz_gracza_x = Number(gra[0])
-            poz_gracza_y = Number(gra[1])
-            bri = gracz
+            pos_player_x = Number(player[0])
+            pos_player_y = Number(player[1])
+            bri = player
         } 
 }
 
 function admin_tool() {
     if (document.getElementById("admin_tools").checked == true) {
-        document.getElementById("zapisz").style.display = 'inline'
+        document.getElementById("save").style.display = 'inline'
         document.getElementById("level").style.display = 'inline'
-        document.getElementById("objekciki").style.display = 'inline'
-        document.getElementById("wysokosc_plansza").style.display = 'inline'
-        document.getElementById("szerokosc_plansza").style.display = 'inline'
+        document.getElementById("game_objects").style.display = 'inline'
+        document.getElementById("height_board").style.display = 'inline'
+        document.getElementById("width_board").style.display = 'inline'
         document.getElementById("start").style.display = 'inline'
     }
     if (document.getElementById("admin_tools").checked == false) {
         document.getElementById("level").style.display = 'none'
-        document.getElementById("objekciki").style.display = 'none'
-        document.getElementById("wysokosc_plansza").style.display = 'none'
-        document.getElementById("szerokosc_plansza").style.display = 'none'
+        document.getElementById("game_objects").style.display = 'none'
+        document.getElementById("height_board").style.display = 'none'
+        document.getElementById("width_board").style.display = 'none'
         document.getElementById("start").style.display = 'none'
-        document.getElementById("zapisz").style.display = 'none'
+        document.getElementById("save").style.display = 'none'
     }
 }
 
@@ -1038,20 +1038,20 @@ function admin_tool() {
     }
 setInterval(bio_mass, 5000)
 function bio_mass() {
-    var na_stone = 15
-    var na_diaxy = 0
+    var for_stone = 15
+    var for_coins = 0
     var bio_mass = document.querySelectorAll(".bio_mass")
-    var czy_moze_rosnac = false
+    var can_expand = false
     for (var i = bio_mass.length - 1; i >= 0; i--) {
         var bio = bio_mass[i].id.split('_');
        
-        var bio_wprawo = document.getElementById(bio[0] + '_' + (Number(bio[1]) + 1)) || {}
-        var bio_wlewo = document.getElementById(bio[0] + '_' + (Number(bio[1]) - 1)) || {}
-        var bio_wdol = document.getElementById((Number(bio[0]) + 1) + '_' + bio[1]) || {}
-        var bio_wgore = document.getElementById((Number(bio[0]) - 1) + '_' + bio[1]) || {}
+        var bio_right = document.getElementById(bio[0] + '_' + (Number(bio[1]) + 1)) || {}
+        var bio_left = document.getElementById(bio[0] + '_' + (Number(bio[1]) - 1)) || {}
+        var bio_bottom = document.getElementById((Number(bio[0]) + 1) + '_' + bio[1]) || {}
+        var bio_top = document.getElementById((Number(bio[0]) - 1) + '_' + bio[1]) || {}
 
-        if ((bio_wprawo.className == 'dirt' || bio_wprawo.className == 'czysto') || (bio_wlewo.className == 'dirt' || bio_wlewo.className == 'czysto') || (bio_wdol.className == 'dirt' || bio_wdol.className == 'czysto') || (bio_wgore.className == 'dirt' || bio_wgore.className == 'czysto')) {
-                czy_moze_rosnac = true
+        if ((bio_right.className == 'dirt' || bio_right.className == 'clear') || (bio_left.className == 'dirt' || bio_left.className == 'clear') || (bio_bottom.className == 'dirt' || bio_bottom.className == 'clear') || (bio_top.className == 'dirt' || bio_top.className == 'clear')) {
+                can_expand = true
         }
 
         else continue
@@ -1059,26 +1059,26 @@ function bio_mass() {
         var _rand_bio_ = Math.floor((Math.random() * 4) + 1);
         switch (_rand_bio_) {
             case 1:
-                if ((bio_wprawo.className == 'dirt' || bio_wprawo.className == 'czysto')) {
-                    bio_wprawo.className = 'bio_mass'
+                if ((bio_right.className == 'dirt' || bio_right.className == 'clear')) {
+                    bio_right.className = 'bio_mass'
                 }
 
                 break
             case 2:
-                if ((bio_wlewo.className == 'dirt' || bio_wlewo.className == 'czysto')) {
-                    bio_wlewo.className = 'bio_mass'
+                if ((bio_left.className == 'dirt' || bio_left.className == 'clear')) {
+                    bio_left.className = 'bio_mass'
                 }
                
                 break
             case 3:
-                if ((bio_wdol.className == 'dirt' || bio_wdol.className == 'czysto')) {
-                    bio_wdol.className = 'bio_mass'
+                if ((bio_bottom.className == 'dirt' || bio_bottom.className == 'clear')) {
+                    bio_bottom.className = 'bio_mass'
                 }
                
                 break
             case 4:
-                if ((bio_wgore.className == 'dirt' || bio_wgore.className == 'czysto')) {
-                    bio_wgore.className = 'bio_mass'
+                if ((bio_top.className == 'dirt' || bio_top.className == 'clear')) {
+                    bio_top.className = 'bio_mass'
 
                 }
                
@@ -1088,12 +1088,12 @@ function bio_mass() {
         }
        
     }
-    if (!czy_moze_rosnac && bio_mass.length > na_stone) {
+    if (!can_expand && bio_mass.length > for_stone) {
         for (var i = bio_mass.length - 1; i >= 0; i--) {
             bio_mass[i].className = 'stone'
         }
     }
-    else if (!czy_moze_rosnac && bio_mass.length > na_diaxy) {
+    else if (!can_expand && bio_mass.length > for_coins) {
         for (var i = bio_mass.length - 1; i >= 0; i--) {
             bio_mass[i].className = 'coin'
         }
@@ -1102,9 +1102,9 @@ function bio_mass() {
 function lifeup() {
     var score = Number(document.getElementById("overall_score").innerHTML)
     while (score >= next_lifeup) {
-        document.getElementById('life').innerHTML = zycie + 1
+        document.getElementById('life').innerHTML = player_life + 1
         next_lifeup += 500
-        zycie++
+        player_life++
     }
     
 }

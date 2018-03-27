@@ -4,7 +4,7 @@
     <title>Boulder Dash</title>
 	<meta charset="utf-8" />
     <meta name="author" content="Sebastian Ogarek" />
-    <link href="stylesheet.css" rel="stylesheet" />
+    <link href="css/stylesheet.css" rel="stylesheet" />
     <script language="javascript">
 document.onmousedown=disableclick;
 status="Right Click Disabled";
@@ -21,7 +21,7 @@ function disableclick(event)
 <body onload="eventsContainer()" onkeydown="registerKey(event)" onkeyup="releaseKey(event)" oncontextmenu="return false">
  <div id="html">   
     <div id="menu">
-        <button id="wczytaj">start game</button>
+        <button id="load">start game</button>
           <button id="pauza">pauza</button>
         <button id="suicide">suicide</button>
           
@@ -52,7 +52,7 @@ function disableclick(event)
         <div>
             <div id="scoreboard">
 
-                    <div><div style="display:inline; color:gold;" id="pkt_coin"></div> <dvi id="coin_img"><img style="display:inline; " src="tekstures/coin.gif" /> </dvi><div style="display:inline" id="required_coins"></div></div>
+                    <div><div style="display:inline; color:gold;" id="pkt_coin"></div> <dvi id="coin_img"><img style="display:inline; " src="textures/coin.gif" /> </dvi><div style="display:inline" id="required_coins"></div></div>
                     <div><div style="display:inline; color:gold;" id="coin_score"></div></div>
                     <div id="time"></div>
                     <div id="overall_score"></div>
@@ -72,9 +72,9 @@ function disableclick(event)
             <div id="admin">
                 <button id="start">edycja</button>
 
-                <input type="text" id="wysokosc_plansza" />
-                <input type="text" id="szerokosc_plansza" />
-                <select id="objekciki">
+                <input type="text" id="height_board" />
+                <input type="text" id="width_board" />
+                <select id="game_objects">
                     <optgroup label="Przeciwnicy">
                         <option>firefly</option>
                         <option>butterfly</option>              
@@ -83,7 +83,7 @@ function disableclick(event)
                     <optgroup label="Teren">
                         <option>dirt</option>
                         <option>stone</option>
-                        <option>czysto</option>
+                        <option>clear</option>
                         <option>coin</option>
                         <option>obsidian</option>
                         <option>cobble</option>
@@ -94,7 +94,7 @@ function disableclick(event)
 
 
 
-                <button id="zapisz">zapisz</button>
+                <button id="save">save</button>
 
                 <textarea type="text" id="level"></textarea>
                 <input type="checkbox" id="admin_tools" />

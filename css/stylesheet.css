@@ -31,11 +31,11 @@ bri {
 }
 
 .dirt {
-    background-image: url('tekstures/dirt.png');
+    background-image: url('../textures/dirt.png');
 }
 
-.gracz {
-    background-image: url('tekstures/player_stay.gif');
+.player {
+    background-image: url('../textures/player_stay.gif');
 }
 
 #menu{
@@ -45,46 +45,46 @@ bri {
 }
 
 .stone {
-    background-image: url('tekstures/stone.png');
+    background-image: url('../textures/stone.png');
 }
 
 .coin {
-    background-image: url('tekstures/coin.gif');
+    background-image: url('../textures/coin.gif');
 }
 
 
 .firefly {
-    background-image: url('tekstures/enemy_wall.gif');
+    background-image: url('../textures/enemy_wall.gif');
 }
 .butterfly{
-     background-image: url('tekstures/butterfly.gif');
+     background-image: url('../textures/butterfly.gif');
 }
 
 .obsidian {
-    background-image: url('tekstures/obsidian.png');
+    background-image: url('../textures/obsidian.png');
 }
 .cobble {
-    background-image: url('tekstures/cobble.jpg');
+    background-image: url('../textures/cobble.jpg');
 }
 .magic_cobble {
-    background-image: url('tekstures/cobble.jpg');
+    background-image: url('../textures/cobble.jpg');
 }
 .af_magic_cobble{
-    background-image: url('tekstures/magic_stone.gif');
+    background-image: url('../textures/magic_stone.gif');
 }
-.czysto{
+.clear{
     /*background-color:black;*/
 
 }
 .explosion {
-    background-image: url('tekstures/explosion.gif');
+    background-image: url('../textures/explosion.gif');
 }
 
 .teleport{
-    background-image: url('tekstures/exit.gif')
+    background-image: url('../textures/exit.gif')
 }
 .bio_mass{
-    background-image: url('tekstures/bio_mass.gif');
+    background-image: url('../textures/bio_mass.gif');
 }
 #level{
 }
