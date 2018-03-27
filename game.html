@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boulder Dash</title>
+	<meta charset="utf-8" />
+    <meta name="author" content="Sebastian Ogarek" />
+    <link href="stylesheet.css" rel="stylesheet" />
+    <script language="javascript">
+document.onmousedown=disableclick;
+status="Right Click Disabled";
+function disableclick(event)
+{
+  if(event.button==2)
+   {
+     return false;    
+   }
+}
+</script>
+    <script src="game.js"></script>
+</head>
+<body onload="eventsContainer()" onkeydown="registerKey(event)" onkeyup="releaseKey(event)" oncontextmenu="return false">
+ <div id="html">   
+    <div id="menu">
+        <button id="wczytaj">start game</button>
+          <button id="pauza">pauza</button>
+        <button id="suicide">suicide</button>
+          
+          <select id="levels">
+            <optgroup label="Levels">
+                <option value="1" id="lvl1">Level 1</option>
+                <option value="2" id="lvl2">Level 2</option>
+                <option value="3" id="lvl3">Level 3</option>
+                <option value="4" id="lvl4">Level 4</option>
+                <option value="5" id="lvl5">bonus 1</option>
+                <option value="6" id="lvl6">Level 5</option>
+                <option value="7" id="lvl7">Level 6</option>
+                <option value="8" id="lvl8">Level 7</option>
+                <option value="9" id="lvl9">Level 8</option>
+                <option value="10" id="lvl10">bonus 2</option>
+                <option value="11" id="lvl11">Level 9</option>
+                <option value="12" id="lv12">Level 10</option>
+                <option value="13" id="lvl13">Level 11</option>
+                <option value="14" id="lvl14">Level 12</option>
+                <option value="15" id="lvl15">bonus 3</option>
+                <option value="16" id="lvl16">Level 13</option>
+                <option value="17" id="lvl17">Level 14</option>
+                <option value="18" id="lvl18">Level 15</option>
+                <option value="19" id="lvl19">Level 16</option>
+                <option value="20" id="lvl20">bonus 4</option>
+            </optgroup>
+        </select>
+        <div>
+            <div id="scoreboard">
+
+                    <div><div style="display:inline; color:gold;" id="pkt_coin"></div> <dvi id="coin_img"><img style="display:inline; " src="tekstures/coin.gif" /> </dvi><div style="display:inline" id="required_coins"></div></div>
+                    <div><div style="display:inline; color:gold;" id="coin_score"></div></div>
+                    <div id="time"></div>
+                    <div id="overall_score"></div>
+            </div>
+            <div id="scoreboard2">
+                <div> PLAYER 1</div>
+                <div id="life"></div>
+                <div>MEN</div>
+
+
+
+            </div>
+            </div>
+            <div id="game">
+                <div id="bricks" draggable="false"></div>
+            </div>
+            <div id="admin">
+                <button id="start">edycja</button>
+
+                <input type="text" id="wysokosc_plansza" />
+                <input type="text" id="szerokosc_plansza" />
+                <select id="objekciki">
+                    <optgroup label="Przeciwnicy">
+                        <option>firefly</option>
+                        <option>butterfly</option>              
+                        <option>bio_mass</option>
+                    </optgroup>
+                    <optgroup label="Teren">
+                        <option>dirt</option>
+                        <option>stone</option>
+                        <option>czysto</option>
+                        <option>coin</option>
+                        <option>obsidian</option>
+                        <option>cobble</option>
+                        <option>teleport</option>
+                        <option>magic_cobble</option>
+</optgroup>
+                </select>
+
+
+
+                <button id="zapisz">zapisz</button>
+
+                <textarea type="text" id="level"></textarea>
+                <input type="checkbox" id="admin_tools" />
+
+
+
+            </div>
+        </div>   
+     <div id="getttttttttttt_dunked_on">* GAME OVER</div>
+     <div id="highscore" style="color: white;"></div>
+     <div style="color: white;"> ruch - w,a,s,d . zbieranie ziemi dookoła - strzałki</div>
+</body>
+</html>

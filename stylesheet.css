@@ -1,0 +1,163 @@
+﻿html {
+    text-align: center;
+    background-color:black;
+}
+
+body {
+    width:100%;
+    height:100%;
+    text-align: center;
+    display: inline-block;
+    width:820px;
+}
+
+#bricks{
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    border: 10px solid black;
+    position:relative;
+    display:inline-block;
+    transition: opacity 0.5s;
+}
+
+bri {
+
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+.dirt {
+    background-image: url('tekstures/dirt.png');
+}
+
+.gracz {
+    background-image: url('tekstures/player_stay.gif');
+}
+
+#menu{
+    right: 50%;
+    /*transform: translateX(50%);*/
+    /*position: absolute;*/
+}
+
+.stone {
+    background-image: url('tekstures/stone.png');
+}
+
+.coin {
+    background-image: url('tekstures/coin.gif');
+}
+
+
+.firefly {
+    background-image: url('tekstures/enemy_wall.gif');
+}
+.butterfly{
+     background-image: url('tekstures/butterfly.gif');
+}
+
+.obsidian {
+    background-image: url('tekstures/obsidian.png');
+}
+.cobble {
+    background-image: url('tekstures/cobble.jpg');
+}
+.magic_cobble {
+    background-image: url('tekstures/cobble.jpg');
+}
+.af_magic_cobble{
+    background-image: url('tekstures/magic_stone.gif');
+}
+.czysto{
+    /*background-color:black;*/
+
+}
+.explosion {
+    background-image: url('tekstures/explosion.gif');
+}
+
+.teleport{
+    background-image: url('tekstures/exit.gif')
+}
+.bio_mass{
+    background-image: url('tekstures/bio_mass.gif');
+}
+#level{
+}
+#admin_tools{
+    display:none;
+}
+@font-face {
+    font-family: '8-BIT WONDER';
+    src: url('8-BIT WONDER.TTF') format('truetype');
+}
+
+#scoreboard{
+    /*position: fixed;
+    left:50%;
+    top:100px;*/
+    border-top: 5px solid black;
+    background-color: black;
+    display: flex;
+}
+#scoreboard > *{
+    display:inline-block;
+    /*position: absolute;*/
+    font-family:'8-BIT WONDER';
+    color:white;
+    background-color:black;
+    font-size: 20px;
+    flex: 1;
+}
+#scoreboard2{
+    /*position: fixed;
+    left:50%;
+    top:100px;*/
+    border-top: 5px solid black;
+    background-color: black;
+    display: flex;
+}
+#scoreboard2 > *{
+    display:inline-block;
+    /*position: absolute;*/
+    font-family:'8-BIT WONDER';
+    color:white;
+    background-color:black;
+    font-size: 20px;
+    flex: 1;
+}
+#coin_score{
+    right:0px;
+}
+#overall_score{
+    right: 50px;
+}
+#time{
+    right: 100px;
+}
+
+select, button, input, textarea {
+    background: black;
+    color: white;
+}
+div{
+    letter-spacing: 2px
+}
+#getttttttttttt_dunked_on{
+    display:none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color:white;
+    font-family:sans-serif;
+    font-family: 'Comic Sans MS';
+    font-size: 100px;
+    width: 100%;
+    letter-spacing: 0.2em;
+    background: black;
+}

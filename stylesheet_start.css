@@ -1,0 +1,16 @@
+﻿body {
+    background-color:black;
+}
+@font-face {
+    font-family: '8-BIT WONDER';
+    src: url('8-BIT WONDER.TTF') format('truetype');
+}
+#enter{
+     font-family:'8-BIT WONDER';
+     color:white;
+     text-align:center;
+     
+}
+#enter1{
+    height:30px;
+}

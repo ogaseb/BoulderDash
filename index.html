@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="stylesheet_start.css" rel="stylesheet" />
+    <script>
+        window.onload = function () {
+            var snd = new Audio("audio/intro.ogg"); // buffers automatically when created
+            snd.play();
+            snd.volume = 0.01;
+            console.log(0)
+            document.body.onkeydown = function start(e) {
+                var key = e.which
+                if (key) {
+                    console.log('enter')
+                    document.location.href = 'game.html'
+                }
+
+            }
+            
+            var czy_mrug = false
+            setInterval(mrug, 500)
+            function mrug(){
+                if (czy_mrug) {
+                    document.getElementById('enter').style.display = 'none'
+                    czy_mrug = false
+                }
+                else{
+                    document.getElementById('enter').style.display = 'block'
+                    czy_mrug = true
+                }
+            }
+           
+        }
+
+    </script>
+    <title></title>
+</head>
+<body>
+    <p style="text-align:center;"><img src="tekstures/start_image.gif" width="640px" height="424"/></p>
+    <div id="enter1">
+        <div id="enter" style="color:white;">START GAME - PRESS ANY BUTTON</div>
+    </div>
+</body>
+</html>
