@@ -7,7 +7,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 But if you want to just play a game you can visit my webswite, link below.
 
-https://boulderdash.propaniusz.tk/
+https://propanek.github.io/BoulderDash/
 
 
 ### Installing
