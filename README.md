@@ -5,7 +5,7 @@ This is an port of the NES/Atari game called BoulderDash write with plain JavaSc
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-But if you want to just play a game you can visit my webswite, link below.
+But if you want to just play a game you can visit link below.
 
 https://propanek.github.io/BoulderDash/
 
